@@ -1,2 +1,5 @@
+# build related files
+/build
+
 # random junk
 send.bat
