@@ -6,6 +6,7 @@ z3msky's CELL ENGINE CITRUS
 
 
 -------- Acknowledgements --------
+Thank yous and respect to:
 
 devkitPro for homebrew dev tools (devkitARM, citro2d)
 https://github.com/devkitPro/
