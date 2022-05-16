@@ -59,10 +59,16 @@ int Engine::rps(int i)
     
     int* coord = new int[2];
     indexToCoord(i, coord);
-    int minX = (coord[0] > 0)              ? (coord[0] - 1) : (coord[0]),
-        maxX = (coord[0] < GRID_WIDTH-1)   ? (coord[0] + 1) : (coord[0]),
-        minY = (coord[1] > 0)              ? (coord[1] - 1) : (coord[1]),
-        maxY = (coord[1] < GRID_HEIGHT-1)   ? (coord[1] + 1) : (coord[1]);
+
+    int minX, maxX, minY, maxY;
+    minX = maxX = coord[0];
+    minY = maxY = coord[1];
+
+    if (coord[0] > 0) minX--;
+    if (coord[0] < GRID_WIDTH - 1) maxX++;
+    if (coord[1] > 0) minY--;
+    if (coord[1] < GRID_HEIGHT - 1) maxY++;
+
     delete[] coord;
 
     int threatLevel = 0;
@@ -73,7 +79,7 @@ int Engine::rps(int i)
         }
     }
     
-    int threshold = 4;
+    int threshold = 2;
 
     if (threatLevel > threshold) return threat;
     else return cells[i];
