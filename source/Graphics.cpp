@@ -12,10 +12,9 @@ You should have received a copy of the GNU General Public License along with cel
 
 Graphics::Graphics(C3D_RenderTarget* target)
     : top(target), cells(nullptr),
-    clrClear( C2D_Color32(0x00, 0x00, 0xFF, 0xFF) ),
-    clrRed( C2D_Color32(0xFF, 0x00, 0x00, 0xFF) ),
-    clrGreen( C2D_Color32(0x00, 0xFF, 0x00, 0xFF) ),
-    clrBlue( C2D_Color32(0x00, 0x00, 0xFF, 0xFF) )
+    clrA(0),
+    clrB(0),
+    clrC(0)
 {
 }
 
@@ -25,12 +24,13 @@ Graphics::~Graphics()
 
 bool Graphics::init()
 {
-    if (!top) return false; 
+    if (!top) return false;
 
     // Init libraries
 	gfxInitDefault();
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
-	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
+	//C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
+	C2D_Init(CELL_COUNT);
 	C2D_Prepare();
 	consoleInit(GFX_BOTTOM, NULL);
 
@@ -52,36 +52,55 @@ void Graphics::setCells(int* c)
     cells = c;
 }
 
+void Graphics::setMenu(Menu* m)
+{
+    menu = m;
+    updateColors();
+}
+
+void Graphics::updateColors()
+{
+    switch (menu->color) {
+        case ColorScheme::RGB:
+            clrA = C2D_Color32(255, 0, 0, 255);
+            clrB = C2D_Color32(0, 255, 0, 255);
+            clrC = C2D_Color32(0, 0, 255, 255);
+            break;
+        case ColorScheme::Purples:
+            clrA = C2D_Color32(81, 45, 158, 255);
+            clrB = C2D_Color32(115, 45, 217, 255);
+            clrC = C2D_Color32(149, 117, 205, 255);
+            break;
+        default: 
+            break; // updates color per draw
+    }
+    menu->colorUpdateNeeded = false;
+}
+
 void Graphics::render()
 {
     // Render the scene
 	C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-	C2D_TargetClear(top, clrClear);
+	C2D_TargetClear(top, clrA);
 	C2D_SceneBegin(top);
 
     for (int y = 0; y < GRID_HEIGHT; y++) {
         for (int x = 0; x < GRID_WIDTH; x++) {
             switch (cells[ y * GRID_WIDTH + x]) {
             case 0:
-                C2D_DrawRectangle(x * CELL_SIZE, y * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, clrRed, clrRed, clrRed, clrRed);
+                C2D_DrawRectangle(x * CELL_SIZE, y * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, clrA, clrA, clrA, clrA);
                 break;
             case 1:
-                C2D_DrawRectangle(x * CELL_SIZE, y * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, clrGreen, clrGreen, clrGreen, clrGreen);
+                C2D_DrawRectangle(x * CELL_SIZE, y * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, clrB, clrB, clrB, clrB);
                 break;
             case 2:
-                C2D_DrawRectangle(x * CELL_SIZE, y * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, clrBlue, clrBlue, clrBlue, clrBlue);
+                C2D_DrawRectangle(x * CELL_SIZE, y * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, clrC, clrC, clrC, clrC);
                 break;
             }
         }
     }
 
+    menu->print();
 
-
-
-	// lower screen options
-	printf("\x1b[1;1H z3msky cell engine 3d v0");
-	printf("\x1b[2;1H    rule:   < %s >", "placeholder");
-	printf("\x1b[3;1H    colors: < %s >", "placeholder");
-	printf("\x1b[4;1H  > exit");
 	C3D_FrameEnd(0);
 }

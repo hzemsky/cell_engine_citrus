@@ -22,32 +22,41 @@ You should have received a copy of the GNU General Public License along with cel
 
 int main(int argc, char* argv[])
 {
-	// Init Engine
-	Engine* engine = new Engine();
-
-	// Init Graphics
+	// init engine, graphics, menu
 	C3D_RenderTarget* target = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+	
+	Engine* engine = new Engine();
+	Menu* menu = new Menu();
 	Graphics* graphics = new Graphics(target);
+	
 	if (!graphics->init()) return -1;
-	// store reference to cells in graphics
 	graphics->setCells( engine->getCells() );
+	graphics->setMenu( menu );
 
-	// Main Loop
+	// main loop
 	while (aptMainLoop())
 	{
 		hidScanInput();
 
-		// temp quitout
-		u32 kDown = hidKeysDown();
-		if (kDown & KEY_START) break;
+		if (menu->quitApp) break; // quit to hbmenu
+
+		// menu controls
+		uint32_t kDown = hidKeysDown();
+		if (kDown & KEY_UP) menu->scrollUp();
+		if (kDown & KEY_DOWN) menu->scrollDown();
+		if (kDown & KEY_A) menu->select();
+		if (kDown & KEY_RIGHT) menu->plus();
+		if (kDown & KEY_LEFT) menu->minus();
 		
-		if (kDown & KEY_A) engine->randomizeCells();
-		else engine->update();
+		// guess what they do
+		if (menu->running) engine->update();
+		if (menu->colorUpdateNeeded) graphics->updateColors();
 		graphics->render();
 	}
 
 	// Clean Up
 	graphics->release();
+	delete menu;
 	delete graphics;
 	delete engine;
 	return 0;

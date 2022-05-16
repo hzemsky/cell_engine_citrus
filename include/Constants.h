@@ -12,7 +12,7 @@ You should have received a copy of the GNU General Public License along with cel
 #define SCREEN_WIDTH  400
 #define SCREEN_HEIGHT 240
 
-#define CELL_SIZE   8
-#define GRID_WIDTH  50
-#define GRID_HEIGHT 30
-#define CELL_COUNT  1500
+#define CELL_SIZE   4
+#define GRID_WIDTH  100
+#define GRID_HEIGHT 60
+#define CELL_COUNT  6000

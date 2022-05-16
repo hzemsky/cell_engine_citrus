@@ -7,13 +7,14 @@ Cell engine citrus is distributed in the hope that it will be useful, but WITHOU
 You should have received a copy of the GNU General Public License along with cell engine citrus. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <stdlib.h>
+#include <3ds.h>
+#include <string>
 
-enum Setting { Rule, Color, Quit };
+enum Setting { Rule = 0, Color, Quit };
 
-enum Rule { RPS };
+enum Rule { RPS = 0 };
 
-enum ColorScheme { BW, RGB, MC };
+enum ColorScheme { BW = 0, RGB, Purples };
 
 class Menu {
 public:
@@ -28,8 +29,22 @@ public:
     void minus();
     void select();
 
-private:
+    void updateStrings();
+    void print();
+
+    // Menu updates public bools, and Main() does these based on whether they're set
+    bool quitApp;
+    bool running;
+    bool colorUpdateNeeded;
+
+    // settings. strings are for printing to console
     int selectedSetting;
     int rule;
+    std::string rule_s;
     int color;
+    std::string color_s;
+    std::string color_preview_s;
+
+private:
+    bool needsUpdate; // only update console when it changes
 };

@@ -15,6 +15,8 @@ You should have received a copy of the GNU General Public License along with cel
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "Menu.h"
+
 class Graphics {
 public:
     Graphics() = delete;
@@ -24,18 +26,19 @@ public:
     ~Graphics();
 
     bool init();
-    bool release();
-    bool reset();
-
     void setCells(int*);
+    void setMenu(Menu*);
+    bool release();
+
+    void updateColors();
     void render();
 
 private:
     C3D_RenderTarget* top;
+    Menu* menu;
     int* cells;
 
-    u32 clrClear;
-    u32 clrRed;
-    u32 clrGreen;
-    u32 clrBlue;
+    uint32_t clrA; // A is used when theres more than 3 colors
+    uint32_t clrB;
+    uint32_t clrC;
 };
