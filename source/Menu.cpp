@@ -18,9 +18,8 @@ You should have received a copy of the GNU General Public License along with cel
 
 Menu::Menu()
     : quitApp(false), running(true), colorUpdateNeeded(false),
-    selectedSetting(Setting::Rule),
-    rule(Rule::RPS), rule_s(RULE_RPS),
-    color(ColorScheme::RGB), color_s(COLOR_RGB), color_preview_s(COLOR_PREVIEW_RGB),
+    selectedSetting(Setting::Rule), rule(Rule::RPS), color(ColorScheme::RGB),
+    rule_s(RULE_RPS), color_s(COLOR_RGB), color_preview_s(COLOR_PREVIEW_RGB),
     needsUpdate(true)
 {
 
@@ -29,6 +28,11 @@ Menu::Menu()
 Menu::~Menu()
 {
 
+}
+
+void Menu::registerEngine(Engine* e)
+{
+    engine = e;
 }
 
 void Menu::updateStrings() {
@@ -55,19 +59,29 @@ void Menu::print()
             printf("\x1b[2;1H Welcome to cell engine citrus v0");
             printf("\x1b[4;1H Rule:   \x1b[47;30m <%s> \x1b[0m", rule_s.c_str());
             printf("\x1b[5;1H Colors:   %s   %s", color_s.c_str(), color_preview_s.c_str());
-            printf("\x1b[6;1H Quit");
+            printf("\x1b[6;1H Random");
+            printf("\x1b[7;1H Quit");
             break;
         case Setting::Color:
             printf("\x1b[2;1H Welcome to cell engine citrus v0");
             printf("\x1b[4;1H Rule:     %s", rule_s.c_str());
             printf("\x1b[5;1H Colors: \x1b[47;30m <%s> \x1b[0m %s", color_s.c_str(), color_preview_s.c_str());
-            printf("\x1b[6;1H Quit");
+            printf("\x1b[6;1H Random");
+            printf("\x1b[7;1H Quit");
+            break;
+        case Setting::Randomize:
+            printf("\x1b[2;1H Welcome to cell engine citrus v0");
+            printf("\x1b[4;1H Rule:     %s", rule_s.c_str());
+            printf("\x1b[5;1H Colors:   %s   %s", color_s.c_str(), color_preview_s.c_str());
+            printf("\x1b[6;1H Random  \x1b[47;30m   press A to randomize  \x1b[0m");
+            printf("\x1b[7;1H Quit");
             break;
         case Setting::Quit:
             printf("\x1b[2;1H Welcome to cell engine citrus v0");
             printf("\x1b[4;1H Rule:     %s", rule_s.c_str());
             printf("\x1b[5;1H Colors:   %s   %s", color_s.c_str(), color_preview_s.c_str());
-            printf("\x1b[6;1H Quit    \x1b[47;30m   press A to quit      \x1b[0m");
+            printf("\x1b[6;1H Random");
+            printf("\x1b[7;1H Quit    \x1b[47;30m   press A to quit       \x1b[0m");
             break;
         }
     }
@@ -77,6 +91,9 @@ void Menu::select()
 {
     needsUpdate = true;
     switch(selectedSetting) {
+    case Setting::Randomize:
+        if (engine) engine->randomizeCells();
+        break;
     case Setting::Quit:
         quitApp = true;
         break;

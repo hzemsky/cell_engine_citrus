@@ -10,6 +10,7 @@ You should have received a copy of the GNU General Public License along with cel
 #pragma once
 
 #include "Constants.h"
+#include "RPSRule.h"
 
 class Engine {
 public:
@@ -21,9 +22,12 @@ public:
     int* getCells();
     void randomizeCells();
     void update();
+    static void indexToCoord(int i, int* coord);
 
-    int rps(int);
 
 private:
     int* cells;
+
+    UpdateRule* currentRule;
+    RPSRule* rps;
 };

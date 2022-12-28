@@ -32,13 +32,12 @@ int main(int argc, char* argv[])
 	if (!graphics->init()) return -1;
 	graphics->setCells( engine->getCells() );
 	graphics->setMenu( menu );
+	menu->registerEngine(engine);
 
 	// main loop
-	while (aptMainLoop())
+	while (aptMainLoop() && !menu->quitApp)
 	{
 		hidScanInput();
-
-		if (menu->quitApp) break; // quit to hbmenu
 
 		// menu controls
 		uint32_t kDown = hidKeysDown();
@@ -48,8 +47,8 @@ int main(int argc, char* argv[])
 		if (kDown & KEY_RIGHT) menu->plus();
 		if (kDown & KEY_LEFT) menu->minus();
 		
-		// guess what they do
-		if (menu->running) engine->update();
+		// update and render
+		engine->update();
 		if (menu->colorUpdateNeeded) graphics->updateColors();
 		graphics->render();
 	}

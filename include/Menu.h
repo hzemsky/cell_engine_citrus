@@ -7,10 +7,13 @@ Cell engine citrus is distributed in the hope that it will be useful, but WITHOU
 You should have received a copy of the GNU General Public License along with cell engine citrus. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#pragma once
+
 #include <3ds.h>
+#include <Engine.h>
 #include <string>
 
-enum Setting { Rule = 0, Color, Quit };
+enum Setting { Rule = 0, Color, Randomize, Quit };
 
 enum Rule { RPS = 0 };
 
@@ -22,6 +25,8 @@ public:
     Menu(const Menu&) = delete;
     Menu& operator= (const Menu&) = delete;
     ~Menu();
+
+    void registerEngine(Engine* e);
 
     void scrollUp();
     void scrollDown();
@@ -37,14 +42,18 @@ public:
     bool running;
     bool colorUpdateNeeded;
 
-    // settings. strings are for printing to console
+    // settings 
     int selectedSetting;
     int rule;
-    std::string rule_s;
     int color;
+    
+    // strings for printing to console
+    std::string rule_s;
     std::string color_s;
     std::string color_preview_s;
 
 private:
     bool needsUpdate; // only update console when it changes
+
+    Engine* engine;
 };
