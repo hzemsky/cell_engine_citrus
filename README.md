@@ -1,8 +1,6 @@
 # cell engine citrus
 
-|=============================|
-| z3msky's cell engine citrus |
-|=============================|
+ z3msky's cell engine citrus 
 
 cell engine citrus is a cellular automata toy for the Nintendo 3DS.
 
